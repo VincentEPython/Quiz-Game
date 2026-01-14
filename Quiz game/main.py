@@ -34,9 +34,20 @@ score = 0
 time_left = 10
 marquee_message = ""
 game_over = False
-question_count = 0
-question_index = 0
+question_count = 0 # total of questions
+question_index = 0 # current question
+questions = [] # adding each line as a list item
 
+def read_questions_from_file():
+    global question_count,question_index,questions
+    #opening questions.txt file
+    question_file = open("questions.txt","r")
+
+    # reading each row of the file one by one
+    for row in question_file:
+        questions.append(row)
+        question_count +=1
+    question_file.close()
 
 def draw():
     screen.fill("navy blue")
@@ -46,8 +57,13 @@ def draw():
     for answer_box in answer_boxes:
         screen.draw.filled_rect(answer_box,"green")
     screen.draw.filled_rect(skip_box,"dark green")
-   
     
-
+    # adding textbox in rectangle
+    message = f"Welcome to the quiz game.You are at Q: {question_index} out of {question_count}"
+    screen.draw.textbox(message,marquee_box,color = "white")
+    screen.draw.textbox(str(time_left),timer_box,color = "white", shadow = (0.5,0.5),scolor = "light grey")
+    screen.draw.textbox("SKIP",skip_box,color = "white",shadow = (0.5,0.5),scolor = "dim grey")
+ 
+read_questions_from_file()
 
 pgzrun.go()
