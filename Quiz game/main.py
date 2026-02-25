@@ -55,11 +55,11 @@ def draw():
     screen.draw.textbox(marquee_message,marquee_box,color = "white")
     screen.draw.textbox(str(time_left),timer_box,color = "white", shadow = (0.5,0.5),scolor = "light grey")
     screen.draw.textbox("SKIP",skip_box,color = "white",shadow = (0.5,0.5),scolor = "dim grey")
-    screen.draw.textbox(question[index].strip(),question_box,color = "white")
+    screen.draw.textbox(question[0].strip(),question_box,color = "white")
 
     # adding text to answer boxes
     
-    
+    index = 1
     for answerbox in answer_boxes:
         screen.draw.textbox(question[index].strip(),answerbox,color = "white")
         index = index+1
@@ -68,7 +68,8 @@ def draw():
 def read_questions_from_file():
 
     global question_count,question_index,questions
-    #opening questions.txt file
+    #opening questions.txt file 
+    # the "r" specifies the read mode 
     question_file = open("questions.txt","r")
 
     # reading each row of the file one by one
@@ -88,7 +89,9 @@ def update():
 def read_next_question():
     global question_index
     question_index += 1
-    question = questions.pop(0).split(",")
+    question = questions.pop(0).split(",") 
+    # .pop(0) is deleting the zeroth index an split is splitting that index multiple packages making the question
+    #variable a list
     return question
 
 def on_mouse_down(pos):
@@ -107,6 +110,7 @@ def on_mouse_down(pos):
 def correct_answer():
     global score,question,time_left,questions
     score = score +1
+    # this part of the code means if there are any questions left then read the next one and reset the timer
     if questions:
         question = read_next_question()
         time_left = 10
@@ -123,10 +127,10 @@ def game_over_func():
 def skip_question():
     global question, time_left
     if questions and not is_game_over:
-        question = read_next_question
+        question = read_next_question()
         time_left = 10
     else:
-        game_over()
+        game_over_func()
     
 
 def update_time_left():
@@ -134,16 +138,12 @@ def update_time_left():
     if time_left:
         time_left = time_left -1
     else:
-        game_over()
+        game_over_func()
 
                 
-
-
-
-
-
 read_questions_from_file()
 question = read_next_question()
+print(question)
 clock.schedule_interval(update_time_left,1)
 
 pgzrun.go()
